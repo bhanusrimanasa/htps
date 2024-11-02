@@ -1,0 +1,462 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AcademiHub - Your Academic Companion</title>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+
+        :root {
+            --primary: #6366f1;
+            --secondary: #818cf8;
+            --accent: #f43f5e;
+            --dark: #1e293b;
+            --light: #f8fafc;
+            --success: #22c55e;
+            --warning: #eab308;
+            --sidebar-width: 250px;
+        }
+
+        /* Enhanced Login Form */
+        .login-container {
+            height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            background: linear-gradient(135deg, var(--primary) 0%, var(--secondary) 100%);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .login-container::before {
+            content: '';
+            position: absolute;
+            width: 200%;
+            height: 200%;
+            background: rgba(255, 255, 255, 0.1);
+            transform: rotate(45deg);
+            animation: wave 8s infinite linear;
+        }
+
+        @keyframes wave {
+            0% { transform: rotate(45deg) translateY(0); }
+            100% { transform: rotate(45deg) translateY(-50%); }
+        }
+
+        .login-form {
+            background: white;
+            padding: 2.5rem;
+            border-radius: 15px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+            width: 100%;
+            max-width: 400px;
+            position: relative;
+            z-index: 1;
+            transform: translateY(0);
+            transition: transform 0.3s;
+        }
+
+        .login-form:hover {
+            transform: translateY(-5px);
+        }
+
+        .login-form h2 {
+            text-align: center;
+            margin-bottom: 2rem;
+            color: var(--primary);
+            font-size: 2rem;
+            position: relative;
+        }
+
+        .login-form h2::after {
+            content: '';
+            position: absolute;
+            bottom: -10px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 50px;
+            height: 3px;
+            background: var(--primary);
+            border-radius: 3px;
+        }
+
+        .form-group {
+            margin-bottom: 1.5rem;
+            position: relative;
+        }
+
+        .form-group input {
+            width: 100%;
+            padding: 1rem;
+            border: 2px solid #e2e8f0;
+            border-radius: 8px;
+            transition: all 0.3s;
+            font-size: 1rem;
+        }
+
+        .form-group input:focus {
+            border-color: var(--primary);
+            outline: none;
+            box-shadow: 0 0 0 3px rgba(99, 102, 241, 0.2);
+        }
+
+        .form-group label {
+            position: absolute;
+            left: 1rem;
+            top: 1rem;
+            color: #64748b;
+            transition: all 0.3s;
+            pointer-events: none;
+            background: white;
+            padding: 0 5px;
+        }
+
+        .form-group input:focus + label,
+        .form-group input:not(:placeholder-shown) + label {
+            top: -0.5rem;
+            left: 0.8rem;
+            font-size: 0.8rem;
+            color: var(--primary);
+        }
+
+        .login-btn {
+            width: 100%;
+            padding: 1rem;
+            background: var(--primary);
+            color: white;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            font-weight: 600;
+            font-size: 1rem;
+            transition: all 0.3s;
+        }
+
+        .login-btn:hover {
+            background: var(--secondary);
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(99, 102, 241, 0.4);
+        }
+
+        /* Dashboard Layout */
+        .dashboard {
+            display: none;
+            min-height: 100vh;
+            background: var(--light);
+        }
+
+        .sidebar {
+            width: var(--sidebar-width);
+            background: var(--dark);
+            color: white;
+            position: fixed;
+            height: 100vh;
+            padding: 2rem 1rem;
+            transition: all 0.3s;
+        }
+
+        .sidebar:hover {
+            width: calc(var(--sidebar-width) + 20px);
+        }
+
+        .menu-item {
+            padding: 1rem 1.5rem;
+            cursor: pointer;
+            transition: all 0.3s;
+            border-radius: 8px;
+            margin-bottom: 0.8rem;
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+        }
+
+        .menu-item i {
+            font-size: 1.2rem;
+            width: 24px;
+        }
+
+        .menu-item:hover {
+            background: var(--primary);
+            transform: translateX(5px);
+        }
+
+        .main-content {
+            margin-left: var(--sidebar-width);
+            padding: 2rem;
+            min-height: 100vh;
+            background: #f1f5f9;
+        }
+
+        /* Content Sections */
+        .content-section {
+            background: white;
+            padding: 2rem;
+            border-radius: 15px;
+            box-shadow: 0 5px 20px rgba(0, 0, 0, 0.1);
+            margin-bottom: 2rem;
+            display: none;
+        }
+
+        .section-title {
+            color: var(--dark);
+            margin-bottom: 1.5rem;
+            position: relative;
+            padding-bottom: 0.5rem;
+        }
+
+        .section-title::after {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            width: 100px;
+            height: 3px;
+            background: var(--primary);
+            border-radius: 3px;
+        }
+
+        /* Quiz Section */
+        .quiz-container {
+            background: white;
+            padding: 2rem;
+            border-radius: 15px;
+            margin-top: 2rem;
+        }
+
+        .quiz-question {
+            margin-bottom: 1.5rem;
+            font-size: 1.1rem;
+            color: var(--dark);
+        }
+
+        .quiz-options {
+            display: grid;
+            gap: 1rem;
+        }
+
+        .quiz-option {
+            padding: 1rem;
+            border: 2px solid #e2e8f0;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+
+        .quiz-option:hover {
+            border-color: var(--primary);
+            background: rgba(99, 102, 241, 0.1);
+        }
+
+        .quiz-option.selected {
+            border-color: var(--primary);
+            background: rgba(99, 102, 241, 0.2);
+        }
+
+        /* Previous Year Papers */
+        .papers-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 1.5rem;
+            margin-top: 1.5rem;
+        }
+
+        .paper-card {
+            background: white;
+            padding: 1.5rem;
+            border-radius: 10px;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+            transition: all 0.3s;
+        }
+
+        .paper-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
+        }
+
+        /* Feedback Form */
+        .feedback-form {
+            max-width: 600px;
+            margin: 2rem auto;
+        }
+
+        .rating-container {
+            display: flex;
+            gap: 1rem;
+            margin: 1rem 0;
+            justify-content: center;
+        }
+
+        .rating-star {
+            font-size: 2rem;
+            color: #cbd5e1;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+
+        .rating-star.active {
+            color: var(--warning);
+        }
+
+        textarea.feedback-input {
+            width: 100%;
+            padding: 1rem;
+            border: 2px solid #e2e8f0;
+            border-radius: 8px;
+            margin: 1rem 0;
+            min-height: 150px;
+            resize: vertical;
+        }
+
+        /* Performance Chart */
+        .performance-chart {
+            background: white;
+            padding: 1.5rem;
+            border-radius: 10px;
+            margin-top: 2rem;
+        }
+
+        .chart-bar {
+            height: 20px;
+            background: var(--primary);
+            border-radius: 10px;
+            transition: width 1s ease-in-out;
+        }
+    </style>
+</head>
+<body>
+    <!-- Login Form -->
+    <div class="login-container" id="loginContainer">
+        <form class="login-form" id="loginForm">
+            <h2>Welcome to AcademiHub</h2>
+            <div class="form-group">
+                <input type="email" id="email" placeholder=" " required>
+                <label for="email">Email</label>
+            </div>
+            <div class="form-group">
+                <input type="password" id="password" placeholder=" " required>
+                <label for="password">Password</label>
+            </div>
+            <button type="submit" class="login-btn">Login</button>
+        </form>
+    </div>
+
+    <!-- Dashboard -->
+    <div class="dashboard" id="dashboard">
+        <div class="sidebar">
+            <div class="menu-item" data-section="education">
+                <i class="fas fa-graduation-cap"></i>
+                <span>Education</span>
+            </div>
+            <div class="menu-item" data-section="quiz">
+                <i class="fas fa-question-circle"></i>
+                <span>Quiz</span>
+            </div>
+            <div class="menu-item" data-section="papers">
+                <i class="fas fa-file-alt"></i>
+                <span>Previous Papers</span>
+            </div>
+            <div class="menu-item" data-section="feedback">
+                <i class="fas fa-comment"></i>
+                <span>Feedback</span>
+            </div>
+            <div class="menu-item" data-section="performance">
+                <i class="fas fa-chart-line"></i>
+                <span>Performance</span>
+            </div>
+        </div>
+
+        <div class="main-content">
+            <!-- Education Section -->
+            <div class="content-section" id="educationSection">
+                <h2 class="section-title">Select Your Program</h2>
+                <select class="degree-select" id="degreeSelect">
+                    <option value="">Select Degree</option>
+                    <option value="btech">B.Tech</option>
+                    <option value="mtech">M.Tech</option>
+                    <option value="phd">PhD</option>
+                    <option value="msc">MSc</option>
+                </select>
+                <div id="branchSelect" style="display: none;"></div>
+                <div id="yearSelect" style="display: none;"></div>
+                <div id="resources" style="display: none;"></div>
+            </div>
+
+            <!-- Quiz Section -->
+            <div class="content-section" id="quizSection">
+                <h2 class="section-title">Topic Quiz</h2>
+                <div id="quizContainer"></div>
+            </div>
+
+            <!-- Previous Papers Section -->
+            <div class="content-section" id="papersSection">
+                <h2 class="section-title">Previous Year Papers</h2>
+                <div class="papers-grid" id="papersGrid"></div>
+            </div>
+
+            <!-- Feedback Section -->
+            <div class="content-section" id="feedbackSection">
+                <h2 class="section-title">Share Your Feedback</h2>
+                <div class="feedback-form">
+                    <div class="rating-container" id="ratingStars">
+                        <i class="fas fa-star rating-star" data-rating="1"></i>
+                        <i class="fas fa-star rating-star" data-rating="2"></i>
+                        <i class="fas fa-star rating-star" data-rating="3"></i>
+                        <i class="fas fa-star rating-star" data-rating="4"></i>
+                        <i class="fas fa-star rating-star" data-rating="5"></i>
+                    </div>
+                    <textarea class="feedback-input" placeholder="Share your thoughts..."></textarea>
+                    <button class="login-btn">Submit Feedback</button>
+                </div>
+            </div>
+
+            <!-- Performance Section -->
+            <div class="content-section" id="performanceSection">
+                <h2 class="section-title">Your Performance</h2>
+                <div class="performance-chart">
+                    <div class="chart-bar" style="width: 0%"></div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Login functionality
+        document.getElementById('loginForm').addEventListener('submit', function(e) {
+            e.preventDefault();
+            document.getElementById('loginContainer').style.display = 'none';
+            document.getElementById('dashboard').style.display = 'block';
+            document.getElementById('educationSection').style.display = 'block';
+        });
+
+        // Sidebar navigation
+        document.querySelectorAll('.menu-item').forEach(item => {
+            item.addEventListener('click', function() {
+                // Hide all sections
+                document.querySelectorAll('.content-section').forEach(section => {
+                    section.style.display = 'none';
+                });
+
+                // Show selected section
+                const section = this.dataset.section;
+                document.getElementById(section + 'Section').style.display = 'block';
+
+                if (section === 'performance') {
+                    // Animate performance chart
+                    setTimeout(() => {
+                        document.querySelector('.chart-bar').style.width = '75%';
+                    }, 100);
+                }
+            });
+        });
+
+        // Degree selection handler
+        document.getElementById('degreeSelect').addEventListener('change', function() {
+            const branchSelect = document.getElementById('branchSelect');
+            branchSelect.style.display = 'block';
